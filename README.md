@@ -1,6 +1,15 @@
 # SimpleAnimator2D
 A simple animator 2D sprite-based artwork for Unity3D.
 
+## Installation
+1. Open the Unity Package Manager.
+2. Click the + icon and select "Add package from git URL..."
+3. Paste in `https://github.com/OliverAThunes/SimpleAnimator2D.git` and click add.
+
+The package is now installed.
+
+If you have any problems feel free to open an issue.
+
 ## How to use
 Add the Animator2D component to a game object, just like the normal Unity animator.
 
