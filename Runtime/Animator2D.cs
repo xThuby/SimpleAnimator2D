@@ -74,6 +74,9 @@ namespace Thuby.SimpleAnimator2D
 
             inTransition = false;
 
+            if (!currentAnimation.looping && currentFrame == spriteCount - 1)
+                isPlaying = false;
+
             switch (currentAnimation.animationStyle)
             {
                 case AnimationStyle.Normal:
@@ -105,9 +108,6 @@ namespace Thuby.SimpleAnimator2D
                     inTransition = true;
                     break;
             }
-
-            if (!currentAnimation.looping && currentFrame == spriteCount - 1)
-                isPlaying = false;
         }
 
         private void SetAnimation(AnimationClip2D clip)
