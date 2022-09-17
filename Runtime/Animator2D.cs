@@ -166,16 +166,16 @@ namespace Thuby.SimpleAnimator2D
             }
         }
 
-        public void Play(AnimationClip2D clip, int startingFrame, bool cancelSelf = false)
+        public void Hotswap(AnimationClip2D clip)
         {
-            Play(clip, cancelSelf);
-            currentFrame = mod(startingFrame, currentAnimation.cells.Length);
-        }
+            if (clip.Length != currentAnimation.Length)
+            {
+                Debug.LogError("Cannot hot swap to an animation with a different cell count or framerate");
+                return;
+            }
 
-        public void Play(AnimationClip2D clip, int startingFrame, float frameTime, bool cancelSelf = false)
-        {
-            Play(clip, startingFrame, cancelSelf);
-            this.frameTime = frameTime;
+            currentAnimation = clip;
+            spriteRenderer.sprite = currentAnimation.cells[currentFrame];
         }
 
         #endregion
