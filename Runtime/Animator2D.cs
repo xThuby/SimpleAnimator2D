@@ -17,6 +17,7 @@ namespace Thuby.SimpleAnimator2D
         public int CurrentFrame { get { return currentFrame; } }
 
         private float frameTime;
+        private float FrameTime { get { return frameTime; } }
         private float secondsPerFrame;
 
         private SpriteRenderer spriteRenderer;
@@ -160,6 +161,18 @@ namespace Thuby.SimpleAnimator2D
                     SetAnimation(clip);
                 }
             }
+        }
+
+        public void Play(AnimationClip2D clip, int startingFrame, bool cancelSelf = false)
+        {
+            Play(clip, cancelSelf);
+            currentFrame = mod(startingFrame, currentAnimation.cells.Length);
+        }
+
+        public void Play(AnimationClip2D clip, int startingFrame, float frameTime, bool cancelSelf = false)
+        {
+            Play(clip, startingFrame, cancelSelf);
+            this.frameTime = frameTime;
         }
 
         #endregion
