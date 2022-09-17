@@ -17,7 +17,7 @@ namespace Thuby.SimpleAnimator2D
         public int CurrentFrame { get { return currentFrame; } }
 
         private float frameTime;
-        private float FrameTime { get { return frameTime; } }
+        public float FrameTime { get { return frameTime; } }
         private float secondsPerFrame;
 
         private SpriteRenderer spriteRenderer;
