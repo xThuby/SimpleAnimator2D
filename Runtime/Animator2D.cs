@@ -61,6 +61,9 @@ namespace Thuby.SimpleAnimator2D
                 {
                     AdvanceFrame();
 
+                    if (!isPlaying)
+                        return;
+
                     frameTime = 0;
                     currentFrame = mod(currentFrame, currentAnimation.cells.Length);
                     spriteRenderer.sprite = currentAnimation.cells[currentFrame];
