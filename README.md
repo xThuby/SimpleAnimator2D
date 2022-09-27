@@ -20,6 +20,7 @@ Create an AnimationClip2D asset, and drag that asset into the Animator2D compone
 |Method|Explanation|
 |------|-----------|
 |`Play(AnimationClip2D clip, bool cancelSelf)`|Plays the given animation clip. If the currently playing animation clip has a transition to this one then it will play that transition first. If the currently playing animation clip is already set to `clip` it will be ignored, unless `cancelSelf` is true. `cancelSelf` is false by default.|
+|`Hotswap(AnimationClip2D clip)`|Instantly swap out the animation playing without restarting the animation. Useful for changing between two different version of the same animation (I.E Aerial attack and grounded attack). `clip` must have the same cell count and framerate as the already playing clip.|
 
 ## AnimationClip2D
 
