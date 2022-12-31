@@ -39,6 +39,5 @@ Create an AnimationClip2D asset, and drag that asset into the Animator2D compone
 |`ContainsTransition(AnimationClip2D clip)`|Checks if this clip has a transition to the given clip.|
 
 ## TODO
-* Queue system. Keep an internal track of animations that can be queued from an external script.
 * Callback on animation finished.
 * Animation events

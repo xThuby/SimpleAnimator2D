@@ -37,6 +37,9 @@ namespace Thuby.SimpleAnimator2D
         private float animationTime = 0;
         public float AnimationTime { get { return animationTime; } }
 
+        private Queue<AnimationClip2D> clipQueue = new Queue<AnimationClip2D>();
+        public Queue<AnimationClip2D> ClipQueue { get { return clipQueue; } }
+
         private void Awake()
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
@@ -48,6 +51,9 @@ namespace Thuby.SimpleAnimator2D
 
         private void Update()
         {
+            if (!isPlaying && clipQueue.Count > 0)
+                Play(clipQueue.Dequeue(), true);
+
             if (currentAnimation != null && isPlaying && canAnimate)
             {
 #if UNITY_EDITOR
@@ -77,8 +83,17 @@ namespace Thuby.SimpleAnimator2D
 
             inTransition = false;
 
-            if (!currentAnimation.looping && currentFrame == spriteCount - 1)
-                isPlaying = false;
+            if (currentFrame == spriteCount - 1)
+            {
+                if (clipQueue.Count > 0)
+                {
+                    Play(clipQueue.Dequeue(), true);
+                    return;
+                }
+
+                if (!currentAnimation.looping)
+                    isPlaying = false;
+            }
 
             switch (currentAnimation.animationStyle)
             {
@@ -178,9 +193,15 @@ namespace Thuby.SimpleAnimator2D
             spriteRenderer.sprite = currentAnimation.cells[currentFrame];
         }
 
+        public void QueueAnimation(AnimationClip2D clip)
+        {
+            clipQueue.Enqueue(clip);
+        }
+
         #endregion
 
     }
+
 
     public enum AnimationStyle
     {
