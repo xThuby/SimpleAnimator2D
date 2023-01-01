@@ -32,6 +32,8 @@ namespace Thuby.SimpleAnimator2D
 
         private bool inTransition = false;
 
+        private bool initialised = false;
+
         private float normalizedAnimationTime = 0;
         public float NormalizedAnimationTime { get { return normalizedAnimationTime; } }
 
@@ -42,18 +44,25 @@ namespace Thuby.SimpleAnimator2D
         public Queue<AnimationClip2D> ClipQueue { get { return clipQueue; } }
 
         private HashSet<AnimationEvent> events = new HashSet<AnimationEvent>();
+        private HashSet<AnimationEvent> eventsToRemove = new HashSet<AnimationEvent>();
 
-        private void Awake()
+        private void Start()
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
-            if (startingAnimation != null)
-            {
-                SetAnimation(startingAnimation);
-            }
         }
 
         private void Update()
         {
+            if (!initialised)
+            {
+                if (startingAnimation != null)
+                {
+                    SetAnimation(startingAnimation);
+                }
+                initialised = true;
+                return;
+            }
+
             if (!isPlaying && clipQueue.Count > 0)
                 Play(clipQueue.Dequeue(), true);
 
@@ -137,16 +146,25 @@ namespace Thuby.SimpleAnimator2D
 
         private void OnFrameStart()
         {
+            // Remove events slated for removal
+            foreach (AnimationEvent e in eventsToRemove)
+            {
+                events.Remove(e);
+            }
+            eventsToRemove.Clear();
+
             // Check for events and call
             foreach (AnimationEvent e in events)
             {
+                //Debug.Log(currentFrame);
+                //Debug.Log(e);
                 if (currentAnimation != e.clip)
                     continue;
 
                 if (currentFrame != e.frame)
                     continue;
 
-                e.callback?.Invoke(e.eventTag);
+                e.callback?.Invoke(e, e.eventTag);
             }
         }
 
@@ -225,9 +243,22 @@ namespace Thuby.SimpleAnimator2D
             clipQueue.Enqueue(clip);
         }
 
-        public void AddEvent(AnimationClip2D clip, int frame, Action<string> callback, string eventTag = "")
+        public AnimationEvent AddEvent(AnimationClip2D clip, int frame, Action<AnimationEvent, string> callback, string eventTag = "")
         {
-            events.Add(new AnimationEvent(clip, frame, callback, eventTag));
+            AnimationEvent e = new AnimationEvent(clip, frame, callback, eventTag);
+            events.Add(e);
+            return e;
+        }
+
+        public AnimationEvent AddEvent(AnimationEvent animationEvent)
+        {
+            events.Add(animationEvent);
+            return animationEvent;
+        }
+
+        public void RemoveEvent(AnimationEvent animEvent)
+        {
+            eventsToRemove.Add(animEvent);
         }
 
         #endregion
@@ -238,15 +269,20 @@ namespace Thuby.SimpleAnimator2D
     {
         public AnimationClip2D clip;
         public int frame;
-        public Action<string> callback;
+        public Action<AnimationEvent, string> callback;
         public string eventTag;
 
-        public AnimationEvent(AnimationClip2D _clip, int _frame, Action<string> _callback, string _eventTag)
+        public AnimationEvent(AnimationClip2D _clip, int _frame, Action<AnimationEvent, string> _callback, string _eventTag)
         {
             clip = _clip;
             frame = _frame;
             callback = _callback;
             eventTag = _eventTag;
+        }
+
+        public override string ToString()
+        {
+            return "Clip: " + clip.name + ", Frame: " + frame + ", Param: " + eventTag;
         }
     }
 

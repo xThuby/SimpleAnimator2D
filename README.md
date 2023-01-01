@@ -19,8 +19,12 @@ Create an AnimationClip2D asset, and drag that asset into the Animator2D compone
 
 |Method|Explanation|
 |------|-----------|
-|`Play(AnimationClip2D clip, bool cancelSelf)`|Plays the given animation clip. If the currently playing animation clip has a transition to this one then it will play that transition first. If the currently playing animation clip is already set to `clip` it will be ignored, unless `cancelSelf` is true. `cancelSelf` is false by default.|
+|`Play(AnimationClip2D clip, bool cancelSelf = false)`|Plays the given animation clip. If the currently playing animation clip has a transition to this one then it will play that transition first. If the currently playing animation clip is already set to `clip` it will be ignored, unless `cancelSelf` is true. `cancelSelf` is false by default.|
 |`Hotswap(AnimationClip2D clip)`|Instantly swap out the animation playing without restarting the animation. Useful for changing between two different version of the same animation (I.E Aerial attack and grounded attack). `clip` must have the same cell count and framerate as the already playing clip.|
+|`QueueAnimation(AnimationClip2D clip)`|Enqueues an animation to the `events` queue. The animator will play this animation when the current animation finishes, even if the current animation is set to loop. When dequeued, the clip is played with `cancelSelf` as true.|
+|`AddEvent(AnimationClip2D clip, int frame, Action<string> callback, string eventTag = "")`|Adds an animation event associated with the given `clip`. `callback` will be called, providing the tag as a string, when the animation reaches the given frame. Returns the `AnimationEvent` instance.|
+|`AddEvent(AnimationEvent animationEvent)`|Same as above but you can pass in an instance of an `AnimationEvent` instead of the parameters.|
+|`RemoveEvent(AnimationEvent animationEvent)`|Queues the given `animationEvent` for removal at the start of the next animation frame before events are called.|
 
 ## AnimationClip2D
 
