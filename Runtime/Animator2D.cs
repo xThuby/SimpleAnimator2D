@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -40,6 +41,8 @@ namespace Thuby.SimpleAnimator2D
         private Queue<AnimationClip2D> clipQueue = new Queue<AnimationClip2D>();
         public Queue<AnimationClip2D> ClipQueue { get { return clipQueue; } }
 
+        private HashSet<AnimationEvent> events = new HashSet<AnimationEvent>();
+
         private void Awake()
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
@@ -65,6 +68,8 @@ namespace Thuby.SimpleAnimator2D
 
                 if (frameTime > secondsPerFrame)
                 {
+                    OnFrameEnd();
+
                     AdvanceFrame();
 
                     if (!isPlaying)
@@ -73,6 +78,8 @@ namespace Thuby.SimpleAnimator2D
                     frameTime = 0;
                     currentFrame = mod(currentFrame, currentAnimation.cells.Length);
                     spriteRenderer.sprite = currentAnimation.cells[currentFrame];
+
+                    OnFrameStart();
                 }
             }
         }
@@ -116,7 +123,7 @@ namespace Thuby.SimpleAnimator2D
                     }
                     break;
                 case AnimationStyle.Random:
-                    currentFrame = (int)Random.Range(0, spriteCount - 1);
+                    currentFrame = (int)UnityEngine.Random.Range(0, spriteCount - 1);
                     break;
                 case AnimationStyle.Transition:
                     if (currentFrame == currentAnimation.cells.Length - 1)
@@ -126,6 +133,25 @@ namespace Thuby.SimpleAnimator2D
                     inTransition = true;
                     break;
             }
+        }
+
+        private void OnFrameStart()
+        {
+            // Check for events and call
+            foreach (AnimationEvent e in events)
+            {
+                if (currentAnimation != e.clip)
+                    continue;
+
+                if (currentFrame != e.frame)
+                    continue;
+
+                e.callback?.Invoke(e.eventTag);
+            }
+        }
+
+        private void OnFrameEnd()
+        {
         }
 
         private void SetAnimation(AnimationClip2D clip)
@@ -138,6 +164,7 @@ namespace Thuby.SimpleAnimator2D
             secondsPerFrame = 1.0f / currentAnimation.frameRate;
             animationTime = 0;
             spriteRenderer.sprite = clip.cells[0];
+            OnFrameStart();
         }
 
         private void TransitionAnimation(Transition transition, AnimationClip2D toClip)
@@ -198,10 +225,30 @@ namespace Thuby.SimpleAnimator2D
             clipQueue.Enqueue(clip);
         }
 
+        public void AddEvent(AnimationClip2D clip, int frame, Action<string> callback, string eventTag = "")
+        {
+            events.Add(new AnimationEvent(clip, frame, callback, eventTag));
+        }
+
         #endregion
 
     }
 
+    public struct AnimationEvent
+    {
+        public AnimationClip2D clip;
+        public int frame;
+        public Action<string> callback;
+        public string eventTag;
+
+        public AnimationEvent(AnimationClip2D _clip, int _frame, Action<string> _callback, string _eventTag)
+        {
+            clip = _clip;
+            frame = _frame;
+            callback = _callback;
+            eventTag = _eventTag;
+        }
+    }
 
     public enum AnimationStyle
     {

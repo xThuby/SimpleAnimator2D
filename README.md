@@ -40,4 +40,3 @@ Create an AnimationClip2D asset, and drag that asset into the Animator2D compone
 
 ## TODO
 * Callback on animation finished.
-* Animation events
