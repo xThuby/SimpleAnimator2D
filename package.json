@@ -3,7 +3,7 @@
   "version": "1.2.0",
   "displayName": "Simple Animator 2D",
   "description": "A simple animator tool for 2D sprite based animation",
-  "unity": "2021.3",
+  "unity": "2021.4",
   "keywords": [
     "extensions",
     "2D",
