@@ -8,8 +8,9 @@ namespace Thuby.SimpleAnimator2D
     public class Animator2D : MonoBehaviour
     {
         [SerializeField] private AnimationClip2D startingAnimation;
+        public AnimationClip2D StartingAnimation => startingAnimation;
         private AnimationClip2D currentAnimation;
-        public AnimationClip2D CurrentAnimation { get { return currentAnimation; } }
+        public AnimationClip2D CurrentAnimation => currentAnimation;
 
         private AnimationClip2D prevAnimation;
         private AnimationClip2D currentTransitionTo;
