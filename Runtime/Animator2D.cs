@@ -12,6 +12,9 @@ namespace Thuby.SimpleAnimator2D
         private AnimationClip2D currentAnimation;
         public AnimationClip2D CurrentAnimation => currentAnimation;
 
+        public bool useUnscaledDeltaTime;
+        private float deltaTime;
+
         private AnimationClip2D prevAnimation;
         private AnimationClip2D currentTransitionTo;
 
@@ -54,6 +57,11 @@ namespace Thuby.SimpleAnimator2D
 
         private void Update()
         {
+            if (useUnscaledDeltaTime)
+                deltaTime = Time.unscaledDeltaTime;
+            else
+                deltaTime = Time.deltaTime;
+
             if (!initialised)
             {
                 if (startingAnimation != null)
@@ -72,8 +80,8 @@ namespace Thuby.SimpleAnimator2D
 #if UNITY_EDITOR
                 secondsPerFrame = 1.0f / currentAnimation.frameRate;
 #endif
-                frameTime += Time.deltaTime;
-                animationTime += Time.deltaTime;
+                frameTime += deltaTime;
+                animationTime += deltaTime;
                 normalizedAnimationTime = animationTime / currentAnimation.Length;
 
                 if (frameTime > secondsPerFrame)
