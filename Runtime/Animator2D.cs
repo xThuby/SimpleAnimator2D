@@ -94,7 +94,7 @@ namespace Thuby.SimpleAnimator2D
                         return;
 
                     frameTime = 0;
-                    currentFrame = mod(currentFrame, currentAnimation.cells.Length);
+                    currentFrame = Mod(currentFrame, currentAnimation.cells.Length);
                     spriteRenderer.sprite = currentAnimation.cells[currentFrame];
 
                     OnFrameStart();
@@ -208,7 +208,7 @@ namespace Thuby.SimpleAnimator2D
             inTransition = true;
         }
 
-        private int mod(int x, int m)
+        private int Mod(int x, int m)
         {
             return (x % m + m) % m;
         }
