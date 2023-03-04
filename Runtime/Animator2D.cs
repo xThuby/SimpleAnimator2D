@@ -252,6 +252,11 @@ namespace Thuby.SimpleAnimator2D
             clipQueue.Enqueue(clip);
         }
 
+        public void ClearQueue()
+        {
+            clipQueue.Clear();
+        }
+
         public AnimationEvent AddEvent(AnimationClip2D clip, int frame, Action<AnimationEvent, string> callback, string eventTag = "")
         {
             AnimationEvent e = new AnimationEvent(clip, frame, callback, eventTag);
