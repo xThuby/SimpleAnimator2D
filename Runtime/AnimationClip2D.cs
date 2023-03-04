@@ -7,7 +7,6 @@ namespace Thuby.SimpleAnimator2D
     [CreateAssetMenu(fileName = "AnimationClip2D", menuName = "Animation2D/AnimationClip2D", order = 1)]
     public class AnimationClip2D : ScriptableObject
     {
-        public new string name = "New Animation Clip";
         public Sprite[] cells;
         public float frameRate = 12;
         public AnimationStyle animationStyle;
