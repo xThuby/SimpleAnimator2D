@@ -4,9 +4,12 @@ using UnityEngine;
 
 namespace Thuby.SimpleAnimator2D
 {
-    [CreateAssetMenu(fileName = "AnimationClip2D", menuName = "Animation2D/AnimationClip2D", order = 1)]
+    [CreateAssetMenu(fileName = "AnimationClip2D", menuName = "AnimationClip2D", order = 1)]
     public class AnimationClip2D : ScriptableObject
     {
+        [HideInInspector]
+        public Texture2D texture;
+
         public Sprite[] cells;
         public float frameRate = 12;
         public AnimationStyle animationStyle;
