@@ -43,5 +43,6 @@ Create an AnimationClip2D asset, and drag that asset into the Animator2D compone
 |`ContainsTransition(AnimationClip2D clip)`|Checks if this clip has a transition to the given clip.|
 
 ## TODO
+* Aseprite file support
 * Example code snippets.
 * Callback on animation finished.
