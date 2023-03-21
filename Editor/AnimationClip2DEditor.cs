@@ -10,9 +10,18 @@ public class AnimationClip2DEditor : Editor
 {
     private AnimationClip2D anim;
 
+    private bool isPlaying;
+    private float frameTime;
+    private int currentFrame;
+    private bool reverse;
+
     private void OnEnable()
     {
         anim = (AnimationClip2D)target;
+    }
+
+    private void Update()
+    {
     }
 
     public override void OnInspectorGUI()
@@ -43,6 +52,15 @@ public class AnimationClip2DEditor : Editor
         serializedObject.Update();
         EditorGUILayout.PropertyField(transitionsProperty, true);
         serializedObject.ApplyModifiedProperties();
+
+        // EditorGUI.BeginChangeCheck();
+        // isPlaying = GUILayout.Toggle(isPlaying, "Preview", GUI.skin.button, GUILayout.Height(32));
+
+
+        // if (!isPlaying)
+        //     return;
+        // PlayAnimation();
+        // Repaint();
     }
 
     private void UpdateCells()
@@ -73,5 +91,63 @@ public class AnimationClip2DEditor : Editor
         {
             anim.cells = null;
         }
+    }
+
+    private void PlayAnimation()
+    {
+        var secondsPerFrame = 1.0f / anim.frameRate;
+        frameTime += Time.deltaTime;
+
+        if (frameTime > secondsPerFrame)
+        {
+            int spriteCount = anim.cells.Length;
+
+            if (currentFrame == spriteCount - 1)
+            {
+                if (!anim.looping)
+                    isPlaying = false;
+            }
+
+            switch (anim.animationStyle)
+            {
+                case AnimationStyle.Normal:
+                    currentFrame++;
+                    break;
+                case AnimationStyle.PingPong:
+                    if (reverse)
+                    {
+                        currentFrame--;
+                    }
+                    else
+                    {
+                        currentFrame++;
+                    }
+
+                    if ((!reverse && currentFrame == spriteCount - 1) || (reverse && currentFrame == 0))
+                    {
+                        reverse = !reverse;
+                    }
+                    break;
+                case AnimationStyle.Random:
+                    currentFrame = (int)UnityEngine.Random.Range(0, spriteCount - 1);
+                    break;
+            }
+
+            if (!isPlaying)
+                return;
+
+            frameTime = 0;
+            currentFrame = Mod(currentFrame, anim.cells.Length);
+            DrawOnGUISprite(anim.cells[currentFrame]);
+        }
+    }
+
+    void DrawOnGUISprite(Sprite aSprite)
+    {
+    }
+
+    private int Mod(int x, int m)
+    {
+        return (x % m + m) % m;
     }
 }
