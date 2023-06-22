@@ -50,6 +50,9 @@ namespace Thuby.SimpleAnimator2D
         private HashSet<AnimationEvent> events = new HashSet<AnimationEvent>();
         private HashSet<AnimationEvent> eventsToRemove = new HashSet<AnimationEvent>();
 
+        private float rangeValue = 0;
+        public float RangeValue { get => rangeValue; set => rangeValue = value; }
+
         private void Start()
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
@@ -75,29 +78,63 @@ namespace Thuby.SimpleAnimator2D
             if (!isPlaying && clipQueue.Count > 0)
                 Play(clipQueue.Dequeue(), true);
 
-            if (currentAnimation != null && isPlaying && canAnimate)
+            if (currentAnimation != null && canAnimate)
             {
+                // We want to handle animation differently if it's using a range.
+                if (currentAnimation.animationStyle == AnimationStyle.Range)
+                {
+                    // Store bigger and smaller rangeValues
+                    float minRange = 0;
+                    float maxRange = 0;
+                    if (currentAnimation.rangeEnd > currentAnimation.rangeStart)
+                    {
+                        maxRange = currentAnimation.rangeEnd;
+                        minRange = currentAnimation.rangeStart;
+                    }
+                    else
+                    {
+                        maxRange = currentAnimation.rangeStart;
+                        minRange = currentAnimation.rangeEnd;
+                    }
+
+                    // Clamp range value
+                    rangeValue = Mathf.Clamp(rangeValue, minRange, maxRange);
+
+                    // Map range to 0-1 space.
+                    float normalRange = MapRange(rangeValue, minRange, maxRange, 0, 1);
+
+                    // Select frame based on amount of cells and normalRange
+                    currentFrame = (int)Mathf.Floor(normalRange * currentAnimation.cells.Length);
+                    spriteRenderer.sprite = currentAnimation.cells[currentFrame];
+                    normalizedAnimationTime = normalRange;
+                }
+                else
+                {
+                    if (isPlaying)
+                    {
 #if UNITY_EDITOR
                 secondsPerFrame = 1.0f / currentAnimation.frameRate;
 #endif
-                frameTime += deltaTime;
-                animationTime += deltaTime;
-                normalizedAnimationTime = animationTime / currentAnimation.Length;
+                        frameTime += deltaTime;
+                        animationTime += deltaTime;
+                        normalizedAnimationTime = animationTime / currentAnimation.Length;
 
-                if (frameTime > secondsPerFrame)
-                {
-                    OnFrameEnd();
+                        if (frameTime > secondsPerFrame)
+                        {
+                            OnFrameEnd();
 
-                    AdvanceFrame();
+                            AdvanceFrame();
 
-                    if (!isPlaying)
-                        return;
+                            if (!isPlaying)
+                                return;
 
-                    frameTime = 0;
-                    currentFrame = Mod(currentFrame, currentAnimation.cells.Length);
-                    spriteRenderer.sprite = currentAnimation.cells[currentFrame];
+                            frameTime = 0;
+                            currentFrame = Mod(currentFrame, currentAnimation.cells.Length);
+                            spriteRenderer.sprite = currentAnimation.cells[currentFrame];
 
-                    OnFrameStart();
+                            OnFrameStart();
+                        }
+                    }
                 }
             }
         }
@@ -213,6 +250,14 @@ namespace Thuby.SimpleAnimator2D
             return (x % m + m) % m;
         }
 
+        private float MapRange(float value, float inputMin, float inputMax, float outputMin, float outputMax)
+        {
+            float diffOutputRange = Math.Abs((outputMax - outputMin));
+            float diffInputRange = Math.Abs((inputMax - inputMin));
+            float convFactor = (diffOutputRange / diffInputRange);
+            return (outputMin + (convFactor * (value - inputMin)));
+        }
+
         #region Public methods
 
         public void Play(AnimationClip2D clip, bool cancelSelf = false)
@@ -305,6 +350,7 @@ namespace Thuby.SimpleAnimator2D
         Normal,
         PingPong,
         Random,
+        Range,
         [InspectorName(null)] Transition
     }
 

@@ -44,7 +44,14 @@ public class AnimationClip2DEditor : Editor
         EditorGUILayout.PropertyField(cellsProperty, true);
         serializedObject.ApplyModifiedProperties();
 
-        anim.frameRate = EditorGUILayout.FloatField("Frame Rate", anim.frameRate);
+        if (anim.animationStyle == AnimationStyle.Range)
+        {
+            anim.rangeStart = EditorGUILayout.FloatField("Start range", anim.rangeStart);
+            anim.rangeEnd = EditorGUILayout.FloatField("End range", anim.rangeEnd);
+            anim.invertRange = EditorGUILayout.Toggle("Invert range", anim.invertRange);
+        }
+        else
+            anim.frameRate = EditorGUILayout.FloatField("Frame Rate", anim.frameRate);
         anim.animationStyle = (AnimationStyle)EditorGUILayout.EnumPopup("Animation Style", anim.animationStyle);
         anim.looping = EditorGUILayout.Toggle("Looping", anim.looping);
 
