@@ -103,8 +103,11 @@ namespace Thuby.SimpleAnimator2D
                     // Map range to 0-1 space.
                     float normalRange = MapRange(rangeValue, minRange, maxRange, 0, 1);
 
+                    if (currentAnimation.invertRange)
+                        normalRange = 1 - normalRange;
+
                     // Select frame based on amount of cells and normalRange
-                    currentFrame = (int)Mathf.Floor(normalRange * currentAnimation.cells.Length);
+                    currentFrame = (int)Mathf.Floor(normalRange * (currentAnimation.cells.Length - 1));
                     spriteRenderer.sprite = currentAnimation.cells[currentFrame];
                     normalizedAnimationTime = normalRange;
                 }
