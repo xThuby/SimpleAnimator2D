@@ -12,6 +12,9 @@ namespace Thuby.SimpleAnimator2D
 
         public Sprite[] cells;
         public float frameRate = 12;
+        public float rangeStart = 0;
+        public float rangeEnd = 1;
+        public bool invertRange = false;
         public AnimationStyle animationStyle;
         public bool looping = true;
         public Transition[] transitions;
