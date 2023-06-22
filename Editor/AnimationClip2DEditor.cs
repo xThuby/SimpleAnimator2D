@@ -82,7 +82,6 @@ public class AnimationClip2DEditor : Editor
                 {
                     if (obj.GetType() == typeof(Sprite))
                     {
-                        Debug.Log((obj as Sprite).name);
                         sprites.Add(obj as Sprite);
                     }
                 }
