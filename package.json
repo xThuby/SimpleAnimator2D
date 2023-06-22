@@ -1,6 +1,6 @@
 {
   "name": "com.thuby.simple-animator-2d",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "displayName": "Simple Animator 2D",
   "description": "A simple animator tool for 2D sprite based animation",
   "unity": "2021.3",
@@ -11,7 +11,7 @@
     "tools"
   ],
   "author": {
-    "name": "Oliver Andreas Thun\u00e6s",
+    "name": "Oliver Andreas Thunæs",
     "email": "oliver.thunaes@gmail.com",
     "url": "https://twitter.com/xthuby"
   }

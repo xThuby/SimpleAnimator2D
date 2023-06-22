@@ -33,11 +33,6 @@ public class AnimationClip2DEditor : Editor
         // transitions array
 
         anim.texture = (Texture2D)EditorGUILayout.ObjectField("Texture", anim.texture, typeof(Texture2D), false);
-        if (GUI.changed)
-        {
-            EditorUtility.SetDirty(anim.texture);
-            UpdateCells();
-        }
 
         SerializedProperty cellsProperty = serializedObject.FindProperty("cells");
         serializedObject.Update();
@@ -59,6 +54,12 @@ public class AnimationClip2DEditor : Editor
         serializedObject.Update();
         EditorGUILayout.PropertyField(transitionsProperty, true);
         serializedObject.ApplyModifiedProperties();
+
+        if (GUI.changed)
+        {
+            EditorUtility.SetDirty(anim);
+            UpdateCells();
+        }
 
         // EditorGUI.BeginChangeCheck();
         // isPlaying = GUILayout.Toggle(isPlaying, "Preview", GUI.skin.button, GUILayout.Height(32));
