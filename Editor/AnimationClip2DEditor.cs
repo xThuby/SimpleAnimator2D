@@ -51,9 +51,11 @@ public class AnimationClip2DEditor : Editor
             anim.invertRange = EditorGUILayout.Toggle("Invert range", anim.invertRange);
         }
         else
+        {
             anim.frameRate = EditorGUILayout.FloatField("Frame Rate", anim.frameRate);
+            anim.looping = EditorGUILayout.Toggle("Looping", anim.looping);
+        }
         anim.animationStyle = (AnimationStyle)EditorGUILayout.EnumPopup("Animation Style", anim.animationStyle);
-        anim.looping = EditorGUILayout.Toggle("Looping", anim.looping);
 
         SerializedProperty transitionsProperty = serializedObject.FindProperty("transitions");
         serializedObject.Update();
