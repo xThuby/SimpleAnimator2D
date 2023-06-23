@@ -32,7 +32,12 @@ public class AnimationClip2DEditor : Editor
         // looping
         // transitions array
 
+        EditorGUI.BeginChangeCheck();
         anim.texture = (Texture2D)EditorGUILayout.ObjectField("Texture", anim.texture, typeof(Texture2D), false);
+        if (EditorGUI.EndChangeCheck())
+        {
+            UpdateCells();
+        }
 
         SerializedProperty cellsProperty = serializedObject.FindProperty("cells");
         serializedObject.Update();
@@ -58,7 +63,6 @@ public class AnimationClip2DEditor : Editor
         if (GUI.changed)
         {
             EditorUtility.SetDirty(anim);
-            UpdateCells();
         }
 
         // EditorGUI.BeginChangeCheck();
@@ -87,6 +91,11 @@ public class AnimationClip2DEditor : Editor
                     }
                 }
             }
+
+            sprites.Sort((a, b) =>
+            {
+                return a.name.CompareTo(b.name);
+            });
 
             if (sprites.Count > 0)
             {
