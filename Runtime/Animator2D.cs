@@ -231,6 +231,7 @@ namespace Thuby.SimpleAnimator2D
             secondsPerFrame = 1.0f / currentAnimation.frameRate;
             animationTime = 0;
             spriteRenderer.sprite = clip.cells[0];
+            inTransition = false;
             OnFrameStart();
         }
 
