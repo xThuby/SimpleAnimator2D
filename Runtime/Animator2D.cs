@@ -44,6 +44,9 @@ namespace Thuby.SimpleAnimator2D
         private float animationTime = 0;
         public float AnimationTime { get { return animationTime; } }
 
+        private float animationSpeed = 1;
+        public float AnimationSpeed { get => animationSpeed; set => animationSpeed = value; }
+
         private Queue<AnimationClip2D> clipQueue = new Queue<AnimationClip2D>();
         public Queue<AnimationClip2D> ClipQueue { get { return clipQueue; } }
 
@@ -118,9 +121,9 @@ namespace Thuby.SimpleAnimator2D
 #if UNITY_EDITOR
                 secondsPerFrame = 1.0f / currentAnimation.frameRate;
 #endif
-                        frameTime += deltaTime;
-                        animationTime += deltaTime;
-                        normalizedAnimationTime = animationTime / currentAnimation.Length;
+                        frameTime += deltaTime * animationSpeed;
+                        animationTime += deltaTime * animationSpeed;
+                        normalizedAnimationTime = Mathf.Clamp01(animationTime / currentAnimation.Length);
 
                         if (frameTime > secondsPerFrame)
                         {
@@ -232,6 +235,7 @@ namespace Thuby.SimpleAnimator2D
             animationTime = 0;
             spriteRenderer.sprite = clip.cells[0];
             inTransition = false;
+            animationSpeed = 1;
             OnFrameStart();
         }
 
