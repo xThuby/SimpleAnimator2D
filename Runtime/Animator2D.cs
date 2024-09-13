@@ -7,7 +7,8 @@ namespace Thuby.SimpleAnimator2D
 {
     public class Animator2D : MonoBehaviour
     {
-        [SerializeField] private AnimationClip2D startingAnimation;
+        [SerializeField]
+        private AnimationClip2D startingAnimation;
         public AnimationClip2D StartingAnimation => startingAnimation;
         private AnimationClip2D currentAnimation;
         public AnimationClip2D CurrentAnimation => currentAnimation;
@@ -19,10 +20,16 @@ namespace Thuby.SimpleAnimator2D
         private AnimationClip2D currentTransitionTo;
 
         private int currentFrame = 0;
-        public int CurrentFrame { get { return currentFrame; } }
+        public int CurrentFrame
+        {
+            get { return currentFrame; }
+        }
 
         private float frameTime;
-        public float FrameTime { get { return frameTime; } }
+        public float FrameTime
+        {
+            get { return frameTime; }
+        }
         private float secondsPerFrame;
 
         private SpriteRenderer spriteRenderer;
@@ -30,7 +37,10 @@ namespace Thuby.SimpleAnimator2D
         private bool reverse;
 
         private bool isPlaying = false;
-        public bool IsPlaying { get { return isPlaying; } }
+        public bool IsPlaying
+        {
+            get { return isPlaying; }
+        }
 
         private bool canAnimate = true;
 
@@ -39,22 +49,42 @@ namespace Thuby.SimpleAnimator2D
         private bool initialised = false;
 
         private float normalizedAnimationTime = 0;
-        public float NormalizedAnimationTime { get { return normalizedAnimationTime; } }
+        public float NormalizedAnimationTime
+        {
+            get { return normalizedAnimationTime; }
+        }
 
         private float animationTime = 0;
-        public float AnimationTime { get { return animationTime; } }
+        public float AnimationTime
+        {
+            get { return animationTime; }
+        }
 
         private float animationSpeed = 1;
-        public float AnimationSpeed { get => animationSpeed; set => animationSpeed = value; }
+        public float AnimationSpeed
+        {
+            get => animationSpeed;
+            set => animationSpeed = value;
+        }
 
         private Queue<AnimationClip2D> clipQueue = new Queue<AnimationClip2D>();
-        public Queue<AnimationClip2D> ClipQueue { get { return clipQueue; } }
+        public Queue<AnimationClip2D> ClipQueue
+        {
+            get { return clipQueue; }
+        }
 
         private HashSet<AnimationEvent> events = new HashSet<AnimationEvent>();
         private HashSet<AnimationEvent> eventsToRemove = new HashSet<AnimationEvent>();
 
         private float rangeValue = 0;
-        public float RangeValue { get => rangeValue; set => rangeValue = value; }
+        public float RangeValue
+        {
+            get => rangeValue;
+            set => rangeValue = value;
+        }
+
+        private float animTimescale = 1;
+        public float AnimTimescale => animTimescale;
 
         private void Start()
         {
@@ -64,9 +94,9 @@ namespace Thuby.SimpleAnimator2D
         private void Update()
         {
             if (useUnscaledDeltaTime)
-                deltaTime = Time.unscaledDeltaTime;
+                deltaTime = Time.unscaledDeltaTime * animTimescale;
             else
-                deltaTime = Time.deltaTime;
+                deltaTime = Time.deltaTime * animTimescale;
 
             if (!initialised)
             {
@@ -110,7 +140,8 @@ namespace Thuby.SimpleAnimator2D
                         normalRange = 1 - normalRange;
 
                     // Select frame based on amount of cells and normalRange
-                    currentFrame = (int)Mathf.Floor(normalRange * (currentAnimation.cells.Length - 1));
+                    currentFrame = (int)
+                        Mathf.Floor(normalRange * (currentAnimation.cells.Length - 1));
                     spriteRenderer.sprite = currentAnimation.cells[currentFrame];
                     normalizedAnimationTime = normalRange;
                 }
@@ -119,11 +150,13 @@ namespace Thuby.SimpleAnimator2D
                     if (isPlaying)
                     {
 #if UNITY_EDITOR
-                secondsPerFrame = 1.0f / currentAnimation.frameRate;
+                        secondsPerFrame = 1.0f / currentAnimation.frameRate;
 #endif
                         frameTime += deltaTime * animationSpeed;
                         animationTime += deltaTime * animationSpeed;
-                        normalizedAnimationTime = Mathf.Clamp01(animationTime / currentAnimation.Length);
+                        normalizedAnimationTime = Mathf.Clamp01(
+                            animationTime / currentAnimation.Length
+                        );
 
                         if (frameTime > secondsPerFrame)
                         {
@@ -178,7 +211,10 @@ namespace Thuby.SimpleAnimator2D
                         currentFrame++;
                     }
 
-                    if ((!reverse && currentFrame == spriteCount - 1) || (reverse && currentFrame == 0))
+                    if (
+                        (!reverse && currentFrame == spriteCount - 1)
+                        || (reverse && currentFrame == 0)
+                    )
                     {
                         reverse = !reverse;
                     }
@@ -208,8 +244,8 @@ namespace Thuby.SimpleAnimator2D
             // Check for events and call
             foreach (AnimationEvent e in events)
             {
-                //Debug.Log(currentFrame);
-                //Debug.Log(e);
+                // Debug.Log(currentFrame);
+                // Debug.Log(e);
                 if (currentAnimation != e.clip)
                     continue;
 
@@ -220,9 +256,7 @@ namespace Thuby.SimpleAnimator2D
             }
         }
 
-        private void OnFrameEnd()
-        {
-        }
+        private void OnFrameEnd() { }
 
         private void SetAnimation(AnimationClip2D clip)
         {
@@ -258,7 +292,13 @@ namespace Thuby.SimpleAnimator2D
             return (x % m + m) % m;
         }
 
-        private float MapRange(float value, float inputMin, float inputMax, float outputMin, float outputMax)
+        private float MapRange(
+            float value,
+            float inputMin,
+            float inputMax,
+            float outputMin,
+            float outputMax
+        )
         {
             float diffOutputRange = Math.Abs((outputMax - outputMin));
             float diffInputRange = Math.Abs((inputMax - inputMin));
@@ -271,7 +311,10 @@ namespace Thuby.SimpleAnimator2D
         public void Play(AnimationClip2D clip, bool cancelSelf = false)
         {
             // Ignore if we're already playing that clip
-            if ((clip != currentAnimation || currentAnimation == null || cancelSelf) && (!inTransition || currentTransitionTo != clip))
+            if (
+                (clip != currentAnimation || currentAnimation == null || cancelSelf)
+                && (!inTransition || currentTransitionTo != clip)
+            )
             {
                 if (currentAnimation != null)
                 {
@@ -292,7 +335,9 @@ namespace Thuby.SimpleAnimator2D
         {
             if (clip.Length != currentAnimation.Length)
             {
-                Debug.LogError("Cannot hot swap to an animation with a different cell count or framerate");
+                Debug.LogError(
+                    "Cannot hot swap to an animation with a different cell " + "count or framerate"
+                );
                 return;
             }
 
@@ -310,7 +355,12 @@ namespace Thuby.SimpleAnimator2D
             clipQueue.Clear();
         }
 
-        public AnimationEvent AddEvent(AnimationClip2D clip, int frame, Action<AnimationEvent, string> callback, string eventTag = "")
+        public AnimationEvent AddEvent(
+            AnimationClip2D clip,
+            int frame,
+            Action<AnimationEvent, string> callback,
+            string eventTag = ""
+        )
         {
             AnimationEvent e = new AnimationEvent(clip, frame, callback, eventTag);
             events.Add(e);
@@ -329,7 +379,6 @@ namespace Thuby.SimpleAnimator2D
         }
 
         #endregion
-
     }
 
     public struct AnimationEvent
@@ -339,7 +388,12 @@ namespace Thuby.SimpleAnimator2D
         public Action<AnimationEvent, string> callback;
         public string eventTag;
 
-        public AnimationEvent(AnimationClip2D _clip, int _frame, Action<AnimationEvent, string> _callback, string _eventTag)
+        public AnimationEvent(
+            AnimationClip2D _clip,
+            int _frame,
+            Action<AnimationEvent, string> _callback,
+            string _eventTag
+        )
         {
             clip = _clip;
             frame = _frame;
@@ -359,7 +413,9 @@ namespace Thuby.SimpleAnimator2D
         PingPong,
         Random,
         Range,
-        [InspectorName(null)] Transition
+
+        [InspectorName(null)]
+        Transition,
     }
 
     [System.Serializable]
