@@ -83,8 +83,12 @@ namespace Thuby.SimpleAnimator2D
             set => rangeValue = value;
         }
 
-        private float animTimescale = 1;
-        public float AnimTimescale => animTimescale;
+        private float timescale = 1;
+        public float Timescale
+        {
+            get => timescale;
+            set => timescale = value;
+        }
 
         private void Start()
         {
@@ -94,9 +98,9 @@ namespace Thuby.SimpleAnimator2D
         private void Update()
         {
             if (useUnscaledDeltaTime)
-                deltaTime = Time.unscaledDeltaTime * animTimescale;
+                deltaTime = Time.unscaledDeltaTime * timescale;
             else
-                deltaTime = Time.deltaTime * animTimescale;
+                deltaTime = Time.deltaTime * timescale;
 
             if (!initialised)
             {
