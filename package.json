@@ -1,6 +1,6 @@
 {
   "name": "com.thuby.simple-animator-2d",
-  "version": "1.5.5",
+  "version": "1.6.1",
   "displayName": "Simple Animator 2D",
   "description": "A simple animator tool for 2D sprite based animation",
   "unity": "2021.3",
