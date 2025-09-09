@@ -33,6 +33,7 @@ namespace Thuby.SimpleAnimator2D
         private float secondsPerFrame;
 
         private SpriteRenderer spriteRenderer;
+        private UnityEngine.UI.Image imageRenderer;
 
         private bool reverse;
 
@@ -93,6 +94,7 @@ namespace Thuby.SimpleAnimator2D
         private void Start()
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
+            imageRenderer = GetComponent<UnityEngine.UI.Image>();
         }
 
         private void Update()
@@ -146,7 +148,7 @@ namespace Thuby.SimpleAnimator2D
                     // Select frame based on amount of cells and normalRange
                     currentFrame = (int)
                         Mathf.Floor(normalRange * (currentAnimation.cells.Length - 1));
-                    spriteRenderer.sprite = currentAnimation.cells[currentFrame];
+                    SetSprite(currentAnimation.cells[currentFrame]);
                     normalizedAnimationTime = normalRange;
                 }
                 else
@@ -173,7 +175,7 @@ namespace Thuby.SimpleAnimator2D
 
                             frameTime = 0;
                             currentFrame = Mod(currentFrame, currentAnimation.cells.Length);
-                            spriteRenderer.sprite = currentAnimation.cells[currentFrame];
+                            SetSprite(currentAnimation.cells[currentFrame]);
 
                             OnFrameStart();
                         }
@@ -236,6 +238,14 @@ namespace Thuby.SimpleAnimator2D
             }
         }
 
+        private void SetSprite(Sprite sprite)
+        {
+            if (spriteRenderer != null)
+                spriteRenderer.sprite = sprite;
+            else if (imageRenderer != null)
+                imageRenderer.sprite = sprite;
+        }
+
         private void OnFrameStart()
         {
             // Remove events slated for removal
@@ -271,7 +281,7 @@ namespace Thuby.SimpleAnimator2D
             frameTime = 0;
             secondsPerFrame = 1.0f / currentAnimation.frameRate;
             animationTime = 0;
-            spriteRenderer.sprite = clip.cells[0];
+            SetSprite(clip.cells[0]);
             inTransition = false;
             animationSpeed = 1;
             OnFrameStart();
@@ -346,7 +356,7 @@ namespace Thuby.SimpleAnimator2D
             }
 
             currentAnimation = clip;
-            spriteRenderer.sprite = currentAnimation.cells[currentFrame];
+            SetSprite(currentAnimation.cells[currentFrame]);
         }
 
         public void QueueAnimation(AnimationClip2D clip)
