@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Thuby.SimpleAnimator2D
@@ -8,36 +6,30 @@ namespace Thuby.SimpleAnimator2D
     public class AnimationClip2D : ScriptableObject
     {
         [HideInInspector]
-        public Texture2D texture;
+        public Texture2D Texture;
 
-        public Sprite[] cells;
-        public float frameRate = 12;
-        public float rangeStart = 0;
-        public float rangeEnd = 1;
-        public bool invertRange = false;
-        public AnimationStyle animationStyle;
-        public bool looping = true;
-        public Transition[] transitions;
+        public Sprite[] Cells;
+        public float FrameRate = 12;
+        public float RangeStart = 0;
+        public float RangeEnd = 1;
+        public bool InvertRange = false;
+        public AnimationStyle AnimationStyle;
+        public bool Looping = true;
+        public Transition[] Transitions;
 
-        public float Length
-        {
-            get
-            {
-                return (1.0f / frameRate) * cells.Length;
-            }
-        }
+        public float Length => 1.0f / FrameRate * Cells.Length;
 
         // Checks if this clip contains transitions to the specificd clip
         // If so returns that transition, otherwise return null.
         public Transition ContainsTransition(AnimationClip2D clip)
         {
-            if (transitions != null)
+            if (Transitions == null)
+                return null;
+
+            foreach (var transition in Transitions)
             {
-                foreach (var transition in transitions)
-                {
-                    if (transition.clip == clip)
-                        return transition;
-                }
+                if (transition.Clip == clip)
+                    return transition;
             }
 
             return null;

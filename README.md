@@ -31,11 +31,11 @@ Create an AnimationClip2D asset, and drag that asset into the Animator2D compone
 
 |Field|Explanation|
 |------|-----------|
-|`cells`|The animation cells. Each cell is a frame of animation.|
-|`frameRate`|Framerate of the animation.|
-|`animationStyle`|How the animation will play. Can be one of `Normal`, `PingPong`, or `Random`.|
-|`looping`|If the animation should loop.|
-|`transition`|A list of animation clips that this animation clip can transition into. Each transition defines a target clip, the frameRate at which the transition should play at, and which cells (sprites) act as the transition between the this clip and the target clip.|
+|`Cells`|The animation cells. Each cell is a frame of animation.|
+|`FrameRate`|Framerate of the animation.|
+|`AnimationStyle`|How the animation will play. Can be one of `Normal`, `PingPong`, or `Random`.|
+|`Looping`|If the animation should loop.|
+|`Transition`|A list of animation clips that this animation clip can transition into. Each transition defines a target clip, the frameRate at which the transition should play at, and which cells (sprites) act as the transition between the this clip and the target clip.|
 |`Length`|Not visible in the editor. Gets the length in seconds of the animation clip.|
 
 |Methods|Explanation|
@@ -43,7 +43,7 @@ Create an AnimationClip2D asset, and drag that asset into the Animator2D compone
 |`ContainsTransition(AnimationClip2D clip)`|Checks if this clip has a transition to the given clip.|
 
 ## TODO
-* `range` animation style.
+* Document `Range` animation style.
 * Custom editor window for editing animation with preview.
 * Aseprite file support.
 * Example code snippets.
