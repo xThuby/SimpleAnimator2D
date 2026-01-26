@@ -37,7 +37,7 @@ namespace Thuby.SimpleAnimator2D.Editor
                 UpdateCells();
             }
 
-            SerializedProperty cellsProperty = serializedObject.FindProperty("cells");
+            SerializedProperty cellsProperty = serializedObject.FindProperty("Cells");
             serializedObject.Update();
             EditorGUILayout.PropertyField(cellsProperty, true);
             serializedObject.ApplyModifiedProperties();
@@ -56,7 +56,7 @@ namespace Thuby.SimpleAnimator2D.Editor
             anim.AnimationStyle = (AnimationStyle)
                 EditorGUILayout.EnumPopup("Animation Style", anim.AnimationStyle);
 
-            SerializedProperty transitionsProperty = serializedObject.FindProperty("transitions");
+            SerializedProperty transitionsProperty = serializedObject.FindProperty("Transitions");
             serializedObject.Update();
             EditorGUILayout.PropertyField(transitionsProperty, true);
             serializedObject.ApplyModifiedProperties();
