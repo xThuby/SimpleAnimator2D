@@ -62,7 +62,7 @@ namespace Thuby.SimpleAnimator2D
                 ? 0
                 : elapsed / currentAnimation.Length;
 
-        private bool UseUnscaledDeltaTime
+        public bool UseUnscaledDeltaTime
         {
             get => useUnscaledDeltaTime;
             set => useUnscaledDeltaTime = value;
